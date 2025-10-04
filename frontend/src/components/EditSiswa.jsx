@@ -6,9 +6,8 @@ const EditSiswa = () => {
   const [nama, setNama] = useState('');
   const [umur, setUmur] = useState('');
   const navigate = useNavigate();
-  const { id } = useParams(); // ambil id dari URL
+  const { id } = useParams();
 
-  // Ambil data siswa berdasarkan id saat halaman dimuat
   useEffect(() => {
     const getSiswaById = async () => {
       try {
@@ -22,49 +21,74 @@ const EditSiswa = () => {
     getSiswaById();
   }, [id]);
 
-  // Proses simpan perubahan data
   const handleUpdate = async (e) => {
     e.preventDefault();
 
     try {
-      await axios.put(`http://localhost:8000/${id}`, {
-        nama: nama,
-        umur: parseInt(umur)
-      }, {
-        headers: { 'Content-Type': 'application/json' }
-      });
+      await axios.put(
+        `http://localhost:8000/${id}`,
+        {
+          nama: nama,
+          umur: parseInt(umur),
+        },
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
 
-      navigate('/'); // Kembali ke daftar siswa
+      navigate('/');
     } catch (error) {
       console.error('Gagal memperbarui siswa:', error);
     }
   };
 
   return (
-    <div>
-      <h2>Edit Siswa</h2>
-      <form onSubmit={handleUpdate}>
+    <div className="max-w-md mx-auto bg-white shadow-md rounded-lg p-6 mt-10 border border-gray-200">
+      <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
+        Edit Data Siswa
+      </h2>
+      <form onSubmit={handleUpdate} className="space-y-5">
         <div>
-          <label>Nama: </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Nama:
+          </label>
           <input
             type="text"
             value={nama}
             onChange={(e) => setNama(e.target.value)}
             required
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
         <div>
-          <label>Umur: </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Umur:
+          </label>
           <input
             type="number"
             value={umur}
             onChange={(e) => setUmur(e.target.value)}
             required
+            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
         </div>
 
-        <button type="submit">Simpan Perubahan</button>
+        <div className="flex justify-between mt-6">
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition"
+          >
+            Batal
+          </button>
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+          >
+            Simpan Perubahan
+          </button>
+        </div>
       </form>
     </div>
   );
